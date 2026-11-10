@@ -7,6 +7,9 @@ signal retry_pressed
 signal menu_pressed
 signal continue_pressed
 
+## Appended to score and best, e.g. " m" for distance.
+var score_suffix: String = ""
+
 @onready var _title: Label = %Title
 @onready var _stars: StarRating = %Stars
 @onready var _score: Label = %ScoreLabel
@@ -29,8 +32,8 @@ func show_result(won: bool, score: int, stars: int, best: int, has_next: bool, c
 	_title.text = "Level Complete!" if won else "Ouch!"
 	_stars.visible = won
 	_stars.stars = stars
-	_score.text = "Score  %d" % score
-	_best.text = "Best  %d" % best
+	_score.text = "Score  %d%s" % [score, score_suffix]
+	_best.text = "Best  %d%s" % [best, score_suffix]
 	_next.visible = won and has_next
 	_continue.visible = not won and can_continue
 	_continue.disabled = false
@@ -48,3 +51,7 @@ func show_result(won: bool, score: int, stars: int, best: int, has_next: bool, c
 func _on_continue() -> void:
 	_continue.disabled = true
 	continue_pressed.emit()
+
+
+func set_title(text: String) -> void:
+	_title.text = text

@@ -1,8 +1,9 @@
 extends GutTest
 ## End-to-end: drives the real screens the way a player would, by pressing their buttons.
-## menu -> play -> pause -> resume -> die -> continue (ad) -> win -> next level -> progress survives restart.
+## menu -> play -> hold/swing -> pause -> resume -> fall -> continue (ad) -> fall -> retry -> menu shows best.
 
 const MENU: String = "res://game/ui/main_menu.tscn"
+const GAME: String = "res://game/swing/swing_game.tscn"
 const TEST_SAVE: String = "user://test_flow_save.json"
 
 var _fade: float
@@ -46,72 +47,58 @@ func _go_and_wait(action: Callable) -> void:
 
 func test_full_player_journey() -> void:
 	await SceneRouter.go_to(MENU)
-	assert_eq(SceneRouter.current_scene_path(), MENU)
-
-	# Menu -> Play opens the first level.
 	await _go_and_wait(func() -> void: _press(_scene().get_node("%PlayButton")))
-	var level := _scene() as Level
-	assert_not_null(level, "Play should open a level")
-	assert_eq(level.level_id, "level_01")
+	var game := _scene() as SwingGame
+	assert_not_null(game, "Play should open the swing game")
 
-	# Tap starts the run.
-	level.start()
-	await wait_seconds(0.3)
-	assert_true(level.player.running, "player runs after the first tap")
-	assert_gt(level.player.position.x, 0.0)
+	# First press launches; holding grabs a ring once one is in range.
+	game.press()
+	assert_eq(game.state, SwingGame.State.PLAYING)
+	await wait_seconds(1.2)
+	assert_eq(game.swinger.state, Swinger.State.SWINGING, "holding grabs the first ring")
+	game.release_hold()
+	assert_eq(game.swinger.state, Swinger.State.FLYING)
 
 	# Back button pauses, Resume unpauses.
-	assert_true(level.handle_back())
+	assert_true(game.handle_back())
 	assert_true(get_tree().paused)
-	assert_true(level.pause_menu.visible)
-	_press(level.pause_menu.get_node("%ResumeButton"))
+	assert_true(game.pause_menu.visible)
+	_press(game.pause_menu.get_node("%ResumeButton"))
 	assert_false(get_tree().paused)
-	assert_false(level.pause_menu.visible)
 
-	# Dying shows game over with a continue offer.
-	level.player.die()
-	await wait_seconds(1.3)
-	assert_eq(level.state, Level.State.LOST)
-	assert_true(level.game_over.visible)
-	var continue_button: Button = level.game_over.get_node("%ContinueButton")
+	# Never grabbing again: fall into the lava, game over offers Continue.
+	await wait_for_signal(game.game_over_shown, 8.0)
+	assert_eq(game.state, SwingGame.State.OVER)
+	var continue_button: Button = game.game_over.get_node("%ContinueButton")
 	assert_true(continue_button.visible)
 
-	# Continue (rewarded ad stub) revives the player and the run goes on.
+	# Continue (rewarded ad stub) puts the swinger back on a ring.
 	_press(continue_button)
-	await wait_seconds(0.4)
-	assert_eq(level.state, Level.State.RUNNING)
-	assert_true(level.player.alive)
-	assert_false(level.game_over.visible)
+	await wait_seconds(0.3)
+	assert_eq(game.state, SwingGame.State.PLAYING)
+	assert_eq(game.swinger.state, Swinger.State.SWINGING)
 
-	# Reaching the goal wins, saves stars and unlocks level 2.
-	level._on_goal_reached()
-	await wait_seconds(1.5)
-	assert_eq(level.state, Level.State.WON)
-	assert_true(level.game_over.visible)
-	assert_true(SaveManager.is_level_unlocked("level_02"))
-	assert_gt(SaveManager.get_level_stars("level_01"), 0)
+	# Let go and fall again: no second continue.
+	game.release_hold()
+	await wait_for_signal(game.game_over_shown, 8.0)
+	assert_false(continue_button.visible, "only one continue per run")
+	var best: int = int(SaveManager.get_value("stats", "best_distance", 0))
+	assert_eq(best, game.score)
 
-	# Next Level opens level 2.
-	await _go_and_wait(func() -> void: _press(level.game_over.get_node("%NextButton")))
-	assert_eq((_scene() as Level).level_id, "level_02")
+	# Retry restarts the scene; Main Menu shows the best distance.
+	await _go_and_wait(func() -> void: _press(game.game_over.get_node("%RetryButton")))
+	assert_eq((_scene() as SwingGame).state, SwingGame.State.READY)
+	await _go_and_wait(func() -> void: SceneRouter.go_to(MENU))
+	var stats: Label = _scene().get_node("%Stats")
+	assert_string_contains(stats.text, "%d m" % best)
 
-	# Progress survives an app restart (reload from disk).
+	# Progress survives an app restart.
 	SaveManager.data = {}
 	SaveManager.load_data()
-	assert_true(SaveManager.is_level_unlocked("level_02"))
+	assert_eq(int(SaveManager.get_value("stats", "best_distance", 0)), best)
 
 
-func test_level_select_respects_locks() -> void:
-	SaveManager.reset()
-	await SceneRouter.go_to("res://game/ui/level_select.tscn")
-	var grid: GridContainer = _scene().get_node("%Grid")
-	var first: Button = grid.get_child(0).get_child(0)
-	var second: Button = grid.get_child(1).get_child(0)
-	assert_false(first.disabled, "level 1 is always open")
-	assert_true(second.disabled, "level 2 is locked on a fresh save")
-
-
-func test_back_from_menu_quits_only_from_home() -> void:
+func test_back_from_settings_goes_home() -> void:
 	await SceneRouter.go_to("res://game/ui/settings.tscn")
 	await _go_and_wait(SceneRouter.back)
 	assert_eq(SceneRouter.current_scene_path(), MENU)

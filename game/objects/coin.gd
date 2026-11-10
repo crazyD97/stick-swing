@@ -7,7 +7,7 @@ signal collected(coin: Coin)
 @export var radius: float = 34.0
 @export var value: int = 1
 
-var _taken: bool = false
+var taken: bool = false
 var _t: float = randf() * TAU
 
 
@@ -30,9 +30,14 @@ func _process(delta: float) -> void:
 
 
 func _on_body_entered(_body: Node2D) -> void:
-	if _taken:
+	collect()
+
+
+## Picks the coin up (plays the pop animation and frees it). Safe to call more than once.
+func collect() -> void:
+	if taken:
 		return
-	_taken = true
+	taken = true
 	collected.emit(self)
 	set_deferred(&"monitoring", false)
 	var tween := create_tween().set_parallel()

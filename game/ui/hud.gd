@@ -4,6 +4,9 @@ extends CanvasLayer
 
 signal pause_pressed
 
+## Appended to the score, e.g. " m" for distance.
+var score_suffix: String = ""
+
 @onready var _score: Label = %ScoreLabel
 @onready var _coins: Label = %CoinsLabel
 @onready var _hint: Label = %HintLabel
@@ -17,7 +20,7 @@ func _ready() -> void:
 
 
 func set_score(value: int) -> void:
-	_score.text = str(value)
+	_score.text = str(value) + score_suffix
 
 
 func set_coins(value: int) -> void:

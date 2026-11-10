@@ -1,19 +1,6 @@
 extends GutTest
 
 
-func test_star_rules() -> void:
-	assert_eq(Level.calculate_stars(0, 10), 1)
-	assert_eq(Level.calculate_stars(5, 10), 2)
-	assert_eq(Level.calculate_stars(10, 10), 3)
-	assert_eq(Level.calculate_stars(0, 0), 3)
-
-
-func test_catalog_next_level() -> void:
-	assert_eq(LevelCatalog.next_id("level_01"), "level_02")
-	assert_eq(LevelCatalog.next_id(LevelCatalog.LEVELS[-1]["id"]), "")
-	assert_eq(LevelCatalog.next_id("nope"), "")
-
-
 func test_touch_classification() -> void:
 	assert_eq(TouchInput.classify(Vector2(5, 5), 0.1, false), &"tap")
 	assert_eq(TouchInput.classify(Vector2(300, 10), 0.2, false), &"swipe")

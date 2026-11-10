@@ -9,6 +9,7 @@ extends Node
 ##   --shot-path=P    where to save it (default user://screenshots/shot.png); res:// paths and
 ##                    relative paths are resolved against the project folder
 ##   --tap-at=SECONDS simulate a tap in the middle of the screen at SECONDS (repeatable: 1,2.5)
+##   --hold=A-B       press the middle of the screen at A seconds and release at B (repeatable: 1-2,3-3.5)
 ##   --quit=SECONDS   quit after SECONDS (smoke test without a screenshot)
 ##   --reset-save     start with a fresh save file (wipes your real desktop save)
 ##   --temp-save      use a throwaway save file, starting fresh (playtests use this)
@@ -29,6 +30,11 @@ func _ready() -> void:
 	if args.has("tap-at"):
 		for t: String in str(args["tap-at"]).split(","):
 			_tap_later(float(t))
+	if args.has("hold"):
+		for span: String in str(args["hold"]).split(","):
+			var ends: PackedStringArray = span.split("-")
+			if ends.size() == 2:
+				_hold_later(float(ends[0]), float(ends[1]))
 	if args.has("shot"):
 		_screenshot_later(float(args["shot"]), str(args.get("shot-path", "user://screenshots/shot.png")))
 	elif args.has("quit"):
@@ -66,6 +72,20 @@ func _tap_later(seconds: float) -> void:
 		touch.pressed = pressed
 		Input.parse_input_event(touch)
 		await get_tree().process_frame
+
+
+func _hold_later(start: float, end: float) -> void:
+	await get_tree().create_timer(start).timeout
+	_send_touch(true)
+	await get_tree().create_timer(maxf(0.0, end - start)).timeout
+	_send_touch(false)
+
+
+func _send_touch(pressed: bool) -> void:
+	var touch := InputEventScreenTouch.new()
+	touch.position = get_viewport().get_visible_rect().size / 2.0
+	touch.pressed = pressed
+	Input.parse_input_event(touch)
 
 
 func _screenshot_later(seconds: float, path: String) -> void:

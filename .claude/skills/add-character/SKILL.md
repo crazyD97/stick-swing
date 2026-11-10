@@ -22,7 +22,7 @@ Characters have two parts: a **view** (how it looks: a `CharacterView` subclass)
      or make a new player scene `game/characters/<name>.tscn` that instances `player.tscn` with the new style.
    - As an enemy/NPC: create `game/characters/<name>.tscn` with a `CharacterBody2D` or `Area2D` root and a
      `StickFigure` child named `View` using the style. Put behaviour in `game/characters/<name>.gd`.
-     Enemies that hurt the player go in group `obstacle` (the level wires those to `_on_hazard_body_entered`).
+     In Stick Swing the playable character is `game/swing/swinger.tscn`: set the style on it and its `View`.
 3. If a new pose is truly needed, add a case in `StickFigure._target_pose()`. Keep the 7 animation names: never add
    names gameplay must know about.
 

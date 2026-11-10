@@ -19,12 +19,15 @@ Take a screenshot (`mobile_take_screenshot`) after every step and look at it bef
 show a problem with `mobile_save_screenshot` to `build/playtest/device_<step>.png`. Use `mobile_list_elements_on_screen`
 when available, otherwise tap by coordinates from the screenshot.
 
-1. Splash appears, then the main menu with the game's title and Play / Levels / Settings.
-2. Play: the level loads with the character standing and "Tap to start!". Tap: the character runs. Tap again: it jumps.
+1. Splash appears, then the main menu with the title, "Best ... m  Coins ...", Play / Settings.
+2. Play: the stick figure stands on a platform with the hint "Hold to grab a ring". Press and hold: it launches and
+   grabs the highlighted ring, swinging on a rope. Release: it flies. Keep swinging for a few rings; check the
+   highlighted ring is always the one that gets grabbed and that coins are picked up.
 3. Tap the pause button (top right): pause menu appears and the game stops. Resume continues.
 4. Press the Android back button (`mobile_press_button` BACK) during play: it pauses (does not exit).
-5. Let the character hit a box: "Ouch!" screen with score, Continue (watch ad), Retry, Main Menu. Try Continue.
-6. Main Menu -> Levels: level 1 open, later levels locked unless already won.
+5. Stop grabbing and fall into the lava: "Splash!" or "New best!" with distance, Continue (watch ad), Retry, Main Menu.
+   Try Continue: it should put the figure back on a ring. Fall again: Continue is gone.
+6. Retry starts a fresh run; Main Menu shows the new best distance and coin total.
 7. Settings: drag the music slider, toggle vibration, Back returns to the menu.
 8. Back on the main menu, press BACK: the app closes. Relaunch it: settings and progress are kept.
 9. Rotate the device or check notches: UI stays inside the safe area.

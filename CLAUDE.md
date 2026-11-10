@@ -1,7 +1,21 @@
-# DroidPark: 2D Android game template
+# Stick Swing
 
+Endless one-touch rope swinger, made from the DroidPark template.
 Godot **4.7.x**, **GDScript only** (no C#), Compatibility renderer, portrait 1080×1920.
-Every new game starts as a copy of this repo and only adds its own gameplay.
+
+## This game
+
+- Hold anywhere = grab the highlighted ring (or the next one that comes in range); release = let go and fly.
+  First press launches the stick figure off the start platform. Falling into the lava (`LAVA_Y`) ends the run.
+- Score = distance in metres (100 px = 1 m). Best distance and the coin wallet live in SaveManager section `stats`
+  (`best_distance`, `coins`). One rewarded "continue" per run.
+- `game/swing/swing_game.gd`: flow, input, endless generation (`_generate_until`), coins, camera, game over.
+  All per-tick logic is in `tick(delta)` so tests can simulate it; keep it that way.
+- `game/swing/swinger.gd`: hand-rolled deterministic rope physics (`step(delta)`): gravity, taut-rope constraint,
+  forward pump. Origin = grip point; the `StickFigure` hangs below and rotates toward the anchor.
+- `game/swing/anchor.gd`: the rings. Difficulty: `SwingGame.difficulty_at(x)` widens ring gaps up to ~400 m.
+- `tests/unit/test_swing.gd` has a **bot** that must reach 250 m on seed 12345. If you change physics or generation
+  numbers, run the tests: the bot is how we know the course is still playable. Check other seeds when tuning.
 
 ## Layout
 
@@ -13,11 +27,11 @@ Every new game starts as a copy of this repo and only adds its own gameplay.
 | `addons/studio_core/characters/` | Character kit: `CharacterView` interface, `StickFigure`, `CharacterStyle` resource |
 | `addons/studio_core/components/` | Reusable nodes: `Health`, `ShakeCamera` |
 | `addons/studio_core/ui/` | `SafeAreaContainer`, `StarRating`, `StudioUI` helpers |
-| `game/` | This game's own code: `levels/`, `characters/`, `objects/`, `ui/` |
+| `game/` | This game's own code: `swing/` (gameplay), `objects/` (coin), `ui/` |
 | `assets/` | `audio/`, `characters/<name>/<name>_style.tres`, `theme/`, `CREDITS.md` |
 | `tests/unit/` | GUT tests, `test_*.gd`, extend `GutTest` |
 | `tools/` | `build.ps1` / `build.sh`, `new_game.mjs` (copy + rename template), `version.mjs` (bump version) |
-| `tests/integration/` | Journey test that presses real buttons through menu → level → game over |
+| `tests/integration/` | Journey test that presses real buttons through menu → swing → game over → retry |
 | `.claude/` | Skills, hooks, the `playtester` agent and settings. `.mcp.json` = godot + mobile MCP servers |
 | `addons/gut/` | Third-party test framework. Do not edit. |
 
@@ -37,7 +51,7 @@ On Windows the Bash tool runs Git Bash, so `tools/build.sh` works there too (wit
 
 ## Claude tooling
 
-- Skills: `/new-game`, `/add-character`, `/add-level`, `/run-on-phone`, `/playtest`, `/release` (`.claude/skills/`).
+- Skills: `/add-character`, `/run-on-phone`, `/playtest`, `/release` (`.claude/skills/`). `/new-game` is for the template.
 - Hooks (`.claude/settings.json`): `.gd` files are auto-formatted and linted after every edit (fix what gdlint reports);
   tests run when you finish if game files changed since the last green run (fix failures, then finish again);
   edits to generated files and anything touching keystores are blocked.
@@ -47,7 +61,8 @@ On Windows the Bash tool runs Git Bash, so `tools/build.sh` works there too (wit
 
 DevTools flags (after `--`): `--scene=res://…`, `--shot=SECONDS`, `--shot-path=…`, `--tap-at=1,2.5`
 (simulated taps), `--quit=SECONDS`, `--temp-save` (throwaway save), `--reset-save` (wipes the real one).
-Example: `godot --path . -- --scene=res://game/levels/level_01.tscn --tap-at=0.5,2.4 --shot=3 --shot-path=build/l1.png`
+`--hold=A-B` presses at A seconds and releases at B (repeatable: `1-2,3-3.5`).
+Example: `godot --path . -- --temp-save --scene=res://game/swing/swing_game.tscn --tap-at=0.4 --hold=0.6-1.3 --shot=1.15 --shot-path=build/swing.png`
 
 After adding a new `class_name`, run `godot --headless --path . --import` (the `test` command does it) or other
 scripts will fail with "Identifier not declared".
@@ -68,10 +83,8 @@ scripts will fail with "Identifier not declared".
   (`TitleLabel` for titles). Focus with `StudioUI.focus(control)`, never `grab_focus.call_deferred()`.
 - Characters: gameplay only calls `view.play(&"run")` and sets `view.facing`. Animation names are fixed:
   `idle run jump fall hit die win`. New styles extend `CharacterView`. Look and movement live in a `CharacterStyle` `.tres`.
-- Ads/purchases/analytics only through `Ads`, `Purchases`, `Analytics`. Interstitials only between levels.
+- Ads/purchases/analytics only through `Ads`, `Purchases`, `Analytics`. Interstitials only between runs (on Retry), never mid-run.
 - Hand-written `.tscn` files are fine; keep `[gd_scene format=3]`, use `unique_name_in_owner` + `%Name` for nodes scripts need.
-- New level: copy `game/levels/level_02.tscn`, change `level_id` + data, add it to `LevelCatalog.LEVELS`.
-  `test_every_catalog_level_loads` checks the wiring.
 - New third-party asset: add a line to `assets/CREDITS.md` (source, author, licence). Prefer CC0.
 
 ## Mobile rules

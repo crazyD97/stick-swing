@@ -35,11 +35,8 @@ func test_missing_scene_is_rejected() -> void:
 	assert_false(SceneRouter.is_transitioning)
 
 
-func test_every_catalog_level_loads() -> void:
-	for level: Dictionary in LevelCatalog.all():
-		assert_true(ResourceLoader.exists(level["scene"]), "missing scene for %s" % level["id"])
-		var scene: PackedScene = load(level["scene"])
-		var node: Node = scene.instantiate()
-		assert_true(node is Level, "%s root must use level.gd" % level["id"])
-		assert_eq((node as Level).level_id, level["id"], "level_id must match the catalog")
-		node.free()
+func test_game_scene_loads() -> void:
+	var scene: PackedScene = load("res://game/swing/swing_game.tscn")
+	var node: Node = scene.instantiate()
+	assert_true(node is SwingGame)
+	node.free()

@@ -109,9 +109,9 @@ switch ($Command) {
         $shots = @(
             @("--shot=0.8", "--shot-path=$out/1_splash.png"),
             @("--scene=res://game/ui/main_menu.tscn", "--shot=1", "--shot-path=$out/2_menu.png"),
-            @("--scene=res://game/levels/level_01.tscn", "--tap-at=0.5,2.4", "--shot=3", "--shot-path=$out/3_level_running.png"),
-            @("--scene=res://game/levels/level_01.tscn", "--tap-at=0.5", "--shot=5.6", "--shot-path=$out/4_game_over.png"),
-            @("--scene=res://game/ui/level_select.tscn", "--shot=1", "--shot-path=$out/5_level_select.png"),
+            @("--scene=res://game/swing/swing_game.tscn", "--tap-at=0.4", "--hold=0.6-1.3", "--shot=1.15", "--shot-path=$out/3_swinging.png"),
+            @("--scene=res://game/swing/swing_game.tscn", "--tap-at=0.4", "--shot=4.5", "--shot-path=$out/4_game_over.png"),
+            @("--scene=res://game/swing/swing_game.tscn", "--shot=1", "--shot-path=$out/5_ready.png"),
             @("--scene=res://game/ui/settings.tscn", "--shot=1", "--shot-path=$out/6_settings.png")
         )
         foreach ($s in $shots) { & $Godot @(@("--path", ".", "--", "--temp-save") + $s) *> $null }

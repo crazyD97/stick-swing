@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/swing/swinger.gd" id="1_swinger"]
+[ext_resource type="Script" path="res://addons/studio_core/characters/stick_figure.gd" id="2_stick"]
+[ext_resource type="Resource" path="res://assets/characters/hero/hero_style.tres" id="3_style"]
+
+[node name="Swinger" type="Node2D"]
+script = ExtResource("1_swinger")
+style = ExtResource("3_style")
+
+[node name="View" type="Node2D" parent="."]
+script = ExtResource("2_stick")
+style = ExtResource("3_style")
