@@ -1,0 +1,84 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/ui/game_over.gd" id="1_go"]
+[ext_resource type="Script" path="res://addons/studio_core/ui/star_rating.gd" id="2_stars"]
+
+[node name="GameOver" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_go")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(820, 0)
+layout_mode = 2
+
+[node name="Column" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Title" type="Label" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 92
+text = "Level Complete!"
+horizontal_alignment = 1
+
+[node name="Stars" type="Control" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_stars")
+stars = 3
+
+[node name="ScoreLabel" type="Label" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Score  0"
+horizontal_alignment = 1
+
+[node name="BestLabel" type="Label" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.85, 1)
+text = "Best  0"
+horizontal_alignment = 1
+
+[node name="NextButton" type="Button" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Next Level"
+
+[node name="ContinueButton" type="Button" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Continue (watch ad)"
+
+[node name="RetryButton" type="Button" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Retry"
+
+[node name="MenuButton" type="Button" parent="Center/Panel/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Main Menu"

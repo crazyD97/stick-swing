@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "godot": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@coding-solo/godot-mcp@0.1.1"],
+      "env": { "GODOT_PATH": "${GODOT:-godot}" }
+    },
+    "mobile": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@mobilenext/mobile-mcp@1.0.16"]
+    }
+  }
+}

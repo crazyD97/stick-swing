@@ -1,0 +1,68 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/ui/splash.gd" id="1_splash"]
+[ext_resource type="Script" path="res://addons/studio_core/characters/stick_figure.gd" id="2_stick"]
+[ext_resource type="Resource" path="res://assets/characters/hero/hero_style.tres" id="3_style"]
+
+[node name="Splash" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_splash")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.105882, 0.12549, 0.2, 1)
+
+[node name="Logo" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -100.0
+offset_right = 400.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Studio" type="Label" parent="Logo"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "DroidPark"
+horizontal_alignment = 1
+
+[node name="Tagline" type="Label" parent="Logo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.74, 0.85, 1)
+text = "games"
+horizontal_alignment = 1
+
+[node name="FigureAnchor" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -140.0
+offset_bottom = -140.0
+mouse_filter = 2
+
+[node name="Figure" type="Node2D" parent="FigureAnchor"]
+unique_name_in_owner = true
+script = ExtResource("2_stick")
+style = ExtResource("3_style")

@@ -1,0 +1,97 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/ui/settings.gd" id="1_settings"]
+[ext_resource type="Script" path="res://addons/studio_core/ui/safe_area_container.gd" id="2_safe"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.105882, 0.12549, 0.2, 1)
+
+[node name="Safe" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_safe")
+extra_margin = 80
+
+[node name="Column" type="VBoxContainer" parent="Safe"]
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="Title" type="Label" parent="Safe/Column"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="MusicLabel" type="Label" parent="Safe/Column"]
+layout_mode = 2
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[node name="SfxLabel" type="Label" parent="Safe/Column"]
+layout_mode = 2
+text = "Sound effects"
+
+[node name="SfxSlider" type="HSlider" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.9
+
+[node name="VibrationToggle" type="Button" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+toggle_mode = true
+text = "Vibration: On"
+
+[node name="Gap" type="Control" parent="Safe/Column"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="CreditsButton" type="Button" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Credits"
+
+[node name="ResetButton" type="Button" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Reset progress"
+
+[node name="BackButton" type="Button" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Back"

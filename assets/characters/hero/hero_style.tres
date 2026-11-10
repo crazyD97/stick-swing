@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CharacterStyle" format=3]
+
+[ext_resource type="Script" path="res://addons/studio_core/characters/character_style.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+color = Color(0.08, 0.08, 0.1, 1)
+accent_color = Color(0.95, 0.35, 0.3, 1)
+line_width = 11.0
+height = 190.0
+run_speed = 520.0
+jump_velocity = 1350.0
+gravity = 3000.0

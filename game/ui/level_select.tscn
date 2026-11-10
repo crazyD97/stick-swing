@@ -1,0 +1,62 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/ui/level_select.gd" id="1_select"]
+[ext_resource type="Script" path="res://addons/studio_core/ui/safe_area_container.gd" id="2_safe"]
+
+[node name="LevelSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_select")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.105882, 0.12549, 0.2, 1)
+
+[node name="Safe" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_safe")
+extra_margin = 60
+
+[node name="Column" type="VBoxContainer" parent="Safe"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="Title" type="Label" parent="Safe/Column"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Levels"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Safe/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Grid" type="GridContainer" parent="Safe/Column/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 40
+columns = 3
+
+[node name="BackButton" type="Button" parent="Safe/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Back"

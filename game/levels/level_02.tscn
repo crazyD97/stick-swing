@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/levels/level.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://game/characters/player.tscn" id="2_player"]
+
+[node name="Level02" type="Node2D"]
+script = ExtResource("1_level")
+level_id = "level_02"
+level_length = 7000.0
+obstacles = PackedVector2Array(1200, 110, 1900, 150, 2500, 110, 3000, 170, 3700, 120, 4200, 120, 4700, 180, 5400, 130, 6100, 160)
+coins = PackedVector2Array(1030, 200, 1200, 300, 1370, 200, 1730, 200, 1900, 300, 2070, 200, 2330, 200, 2500, 300, 2670, 200, 2830, 200, 3000, 300, 3170, 200, 3530, 200, 3700, 300, 3870, 200, 4030, 200, 4200, 300, 4370, 200, 4530, 200, 4700, 300, 4870, 200, 5230, 200, 5400, 300, 5570, 200, 5930, 200, 6100, 300, 6270, 200, 600, 60, 700, 60, 800, 60)
+sky_color = Color(0.98, 0.72, 0.5, 1)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]

@@ -1,0 +1,17 @@
+# Godot
+.godot/
+*.translation
+# Android build template (reinstalled by tools/build.* when missing)
+android/
+# Build output
+build/
+# Secrets: never commit signing material
+*.keystore
+*.jks
+export_credentials.cfg
+.env
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+*.tmp
